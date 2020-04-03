@@ -28,7 +28,6 @@ public class CryptoTools {
         return GGeneratorP.duplicate().getImmutable();
     }
 
-
     public Element getRandomElementInZpPlus(){
         Element res;
         do{

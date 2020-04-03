@@ -39,13 +39,13 @@ public class Client {
         Element sigma_u = tools.getSigmaU(sigma_i, r);
 
         //检查 σu
-        if (tools.CheckE(sigma_u, tools.getGGeneratorP()
-                        ,tools.H(password.getBytes()), PK)){
-
-        }
-        else {
-            return false;
-        }
+//        if (tools.CheckE(sigma_u, tools.getGGeneratorP()
+//                        ,tools.H(password.getBytes()), PK)){
+//
+//        }
+//        else {
+//            return false;
+//        }
 
 
         return true;
