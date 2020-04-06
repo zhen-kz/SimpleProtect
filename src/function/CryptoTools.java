@@ -5,6 +5,9 @@ import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;
 import it.unisa.dia.gas.plaf.jpbc.pairing.a.TypeACurveGenerator;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.*;
+import java.math.BigInteger;
+
 /*客户端和IS共同的密码学操作*/
 public class CryptoTools {
     protected int rBits = 256;
@@ -12,56 +15,53 @@ public class CryptoTools {
     protected Pairing pairing;
     protected Field AdditiveGroupG;
     protected Field MultiplicativeGroupGT;
-    protected  Field Zp;
-    protected  Element GGeneratorP;
+    protected Field Zp;
+    protected Element GGeneratorP;
+    protected BigInteger p;
 
-    public CryptoTools(){
-        pairing = PairingFactory.getPairing(
-                new TypeACurveGenerator(rBits, qBits).generate());
+    //    public CryptoTools(){
+//        pairing = PairingFactory.getPairing(
+//                new TypeACurveGenerator(rBits, qBits).generate());
+//        AdditiveGroupG = pairing.getG1();
+//        MultiplicativeGroupGT = pairing.getGT();
+//        GGeneratorP = AdditiveGroupG.newElement();
+//        Zp = pairing.getZr();
+//    }
+    public CryptoTools(String a_path, String P_path) {
+        pairing = PairingFactory.getPairing(a_path);
         AdditiveGroupG = pairing.getG1();
         MultiplicativeGroupGT = pairing.getGT();
-        GGeneratorP = AdditiveGroupG.newRandomElement().getImmutable();
+        byte[] buffer = new byte[128];
+        try {
+            BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(P_path));
+            if (bufferedInputStream.read(buffer, 0, buffer.length) == -1) {
+                System.out.println("CryptoTools generate P error");
+            }
+            bufferedInputStream.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        GGeneratorP = AdditiveGroupG.newElementFromBytes(buffer).getImmutable();
         Zp = pairing.getZr();
+        p = AdditiveGroupG.getOrder();
     }
 
     public Element getGGeneratorP() {
-        return GGeneratorP.duplicate().getImmutable();
+        return GGeneratorP.getImmutable();
     }
 
-    public Element getRandomElementInZpPlus(){
+    public Element getRandomElementInZpPlus() {
         Element res;
-        do{
+        do {
             res = Zp.newRandomElement().getImmutable();
-        }while(res.isZero());
+        } while (res.isZero());
         return res;
     }
 
-    public static void test(){
-        int rBits = 256;
-        int qBits = 512;
-        TypeACurveGenerator ta = new TypeACurveGenerator(rBits, qBits);
-        PairingParameters pg = ta.generate();
-        Pairing pairing = PairingFactory.getPairing(pg);
-//        Field Zr = pairing.getFieldAt(0);
-//        Field G1 = pairing.getFieldAt(1);
-//        Field G2 = pairing.getFieldAt(2);
-//        Field GT = pairing.getGT(); //getFieldAt(3)
-        int degree = pairing.getDegree();
-        Element in1, in2, n;
-        Field G1 = pairing.getG1(), G2 = pairing.getG2();
-        in1 = G1.newRandomElement().getImmutable();
-        in2 = G1.newRandomElement().getImmutable();
-        n = pairing.getZr().newRandomElement().getImmutable();
-        Element out = pairing.pairing(in1.powZn(n.duplicate()), in2);
-        Element out2 = pairing.pairing(in1, in2.powZn(n));
-        //System.out.println(n.toBigInteger());
-//        SecureRandom r = new SecureRandom("abc".getBytes());
-//        PolyField pf = new PolyField(r, G1);
-//        Polynomial fx = new PolyElement(pf);
-        Element x = pairing.getZr().newElement().getImmutable();
-
-        System.out.println(pairing.getZr().getOrder());
-        System.out.println(out.toBigInteger());
-        System.out.println(out2.toBigInteger());
+    public Element H(final byte[] bytes_array) {
+        return AdditiveGroupG.newElement()
+                .setFromHash(bytes_array, 0, bytes_array.length)
+                .getImmutable();
     }
+
 }
