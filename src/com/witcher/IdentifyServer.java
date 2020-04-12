@@ -84,15 +84,19 @@ public class IdentifyServer {
         this.PKi = PKi;
         map.put("PKi", PKi);
         map.put("PK", PK);
-        //数据库导入
+        //导入数据库测试
         MysqlManager test=new MysqlManager();
         test.getConnection();
         String name="test_one";
-        byte[] one=PKi[0].toString().getBytes();
-        byte[] two=ki[0].toString().getBytes();
-        test.Insert(name,one,two);
+        test.Insert(name,PKi[0],ki[0],PK[0],MAX_PHI,MAX_RHO);//增加数据到数据库
+        test.update("phi",5,"rho",7);//把phi=5的对应的rho变成7
         System.out.println("在数据库中查找：");
-        System.out.println(test.Select(name));
+        HashMap<String,byte[]> test_one=test.Select(name);//根据名字进行查找
+        System.out.print("phi:");
+        System.out.println(MysqlManager.toin(test_one.get("phi")));//要把phi从byte[]转换成int
+        System.out.print("rho:");
+        System.out.println(MysqlManager.toin(test_one.get("rho")));//要把rho从byte[]转换成int
+        System.out.println(test_one);
         test.close();
          return map;
     }
