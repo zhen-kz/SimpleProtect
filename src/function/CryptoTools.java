@@ -10,8 +10,8 @@ import java.math.BigInteger;
 
 /*客户端和IS共同的密码学操作*/
 public class CryptoTools {
-    protected int rBits = 256;
-    protected int qBits = 512;
+    protected int rBits = 256;  //群的阶
+    protected int qBits = 512;  //Zp的阶
     protected Pairing pairing;
     protected Field AdditiveGroupG;
     protected Field MultiplicativeGroupGT;
@@ -29,8 +29,8 @@ public class CryptoTools {
 //    }
     public CryptoTools(String a_path, String P_path) {
         pairing = PairingFactory.getPairing(a_path);
-        AdditiveGroupG = pairing.getG1();
-        MultiplicativeGroupGT = pairing.getGT();
+        AdditiveGroupG = pairing.getG1();  //加法群
+        MultiplicativeGroupGT = pairing.getGT();  //乘法群
         byte[] buffer = new byte[128];
         try {
             BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(P_path));

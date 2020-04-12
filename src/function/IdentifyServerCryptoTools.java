@@ -17,7 +17,7 @@ public class IdentifyServerCryptoTools extends CryptoTools {
         Element[] fx = new Element[degree + 1];
         fx[0] = getRandomElementInZpPlus().getImmutable();
         for (int i = 1; i < fx.length; ++i) {
-            fx[i] = Zp.newRandomElement().getImmutable();
+            fx[i] = Zp.newRandomElement().getImmutable(); //随机生成aij属于Zp*
         }
         return fx;
     }

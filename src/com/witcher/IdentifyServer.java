@@ -3,6 +3,7 @@ package com.witcher;
 import function.ClientCryptoTools;
 import function.CryptographicAlgorithm;
 import function.IdentifyServerCryptoTools;
+import function.MysqlManager;
 import it.unisa.dia.gas.jpbc.Element;
 
 import java.util.HashMap;
@@ -10,6 +11,7 @@ import java.util.Map;
 
 
 public class IdentifyServer {
+
     private IdentifyServerCryptoTools tools;
     private int t = 2;
     private int n = 3;
@@ -35,7 +37,7 @@ public class IdentifyServer {
 
     private Element[] PKi;
 
-    public HashMap<String, Element[]> MasterKeyGen() {
+    public HashMap<String, Element[]> MasterKeyGen()  {
         Element[][] fx = new Element[n][];
         Element[][] aP = new Element[n][];
         Element[][] fji = new Element[n][n];
@@ -82,7 +84,17 @@ public class IdentifyServer {
         this.PKi = PKi;
         map.put("PKi", PKi);
         map.put("PK", PK);
-        return map;
+        //数据库导入
+        MysqlManager test=new MysqlManager();
+        test.getConnection();
+        String name="test_one";
+        byte[] one=PKi[0].toString().getBytes();
+        byte[] two=ki[0].toString().getBytes();
+        test.Insert(name,one,two);
+        System.out.println("在数据库中查找：");
+        System.out.println(test.Select(name));
+        test.close();
+         return map;
     }
 
     //σ
