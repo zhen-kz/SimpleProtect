@@ -26,5 +26,10 @@
         <SOURCES />
       </library>
     </orderEntry>
+    <orderEntry type="library" name="annotations-19.0.0" level="application" />
+    <orderEntry type="library" name="bcprov-jdk15on-164" level="application" />
+    <orderEntry type="library" name="jars" level="application" />
+    <orderEntry type="library" name="jars" level="project" />
+    <orderEntry type="library" name="mysql-connector-java-8.0.19" level="application" />
   </component>
 </module>
